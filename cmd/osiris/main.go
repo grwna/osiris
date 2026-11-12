@@ -35,6 +35,18 @@ Global options:
   --version     show program version
 
 Profiles (--algorithm): rsa-pss-sha256, ecdsa-p256-sha256, ed25519
+
+Examples:
+  osiris keygen --algorithm ed25519 --out keys/release
+  osiris trust add --store trust.json --key keys/release.pub.pem --package contoh-app
+  osiris sign --file contoh-app.zip --package contoh-app --version 1.0.0 \
+              --key keys/release.key.pem --out contoh-app.bundle.json
+  osiris verify --file contoh-app.zip --bundle contoh-app.bundle.json \
+                --trust-store trust.json --package contoh-app --version 1.0.0 --json
+
+Exit codes: 0 success, 1 rejected (verification failed), 2 input/usage/I-O error.
+verify statuses: OK, INPUT_ERROR, FORMAT_ERROR, UNSUPPORTED_ALGORITHM,
+  KEY_NOT_TRUSTED, INVALID_SIGNATURE, METADATA_MISMATCH, ARTIFACT_MISMATCH
 `
 
 func main() {

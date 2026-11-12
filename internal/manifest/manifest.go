@@ -81,6 +81,14 @@ func Serialize(m Manifest) ([]byte, error) {
 	if err := m.Validate(); err != nil {
 		return nil, err
 	}
+	out := encode(m)
+	if len(out) > MaxSize {
+		return nil, fmt.Errorf("manifest too large: %d bytes (max %d)", len(out), MaxSize)
+	}
+	return out, nil
+}
+
+func encode(m Manifest) []byte {
 	var b strings.Builder
 	b.WriteString(`{"schema":"`)
 	b.WriteString(m.Schema)
@@ -99,9 +107,5 @@ func Serialize(m Manifest) ([]byte, error) {
 	b.WriteString(`,"sha256":"`)
 	b.WriteString(m.Artifact.SHA256)
 	b.WriteString(`"}}`)
-	out := []byte(b.String())
-	if len(out) > MaxSize {
-		return nil, fmt.Errorf("manifest too large: %d bytes (max %d)", len(out), MaxSize)
-	}
-	return out, nil
+	return []byte(b.String())
 }

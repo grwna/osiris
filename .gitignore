@@ -1,0 +1,8 @@
+bin/
+*.exe
+.tmp-*
+# Private keys are never committed, except the throw-away test keys below.
+*.key.pem
+!tests/keys/*.key.pem
+# Local scratch
+scratch/

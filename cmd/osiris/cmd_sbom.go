@@ -12,7 +12,10 @@ const sbomUsage = `usage: osiris sbom <generate|sign|verify> [options]
   generate  --file <artifact> --package <name> --version <ver> --out <sbom.json> [--force]
   sign      --sbom <sbom.json> --file <artifact> --package <name> --version <ver>
             --key <private.pem> --out <sbom.bundle.json> [--force]
-  verify    (owned by B) verify release bundle + SBOM bundle and the SHA-256 binding
+  verify    --file <artifact> --bundle <release.bundle.json> --sbom <sbom.json>
+            --sbom-bundle <sbom.bundle.json> --trust-store <trust.json>
+            --package <name> --version <ver> [--json]
+            verify both bundles and that the SBOM references the artifact SHA-256
 `
 
 func cmdSBOM(args []string, stdout, stderr io.Writer) int {
@@ -66,8 +69,36 @@ func cmdSBOM(args []string, stdout, stderr io.Writer) int {
 		fmt.Fprintf(stderr, "SBOM signed with %s key %s\nbundle: %s\n", res.Profile, res.KeyID, res.Bundle)
 		return exitOK
 	case "verify":
-		fmt.Fprintln(stderr, "error: sbom verify is not implemented yet")
-		return exitInput
+		fs := newFlagSet("sbom verify", stderr)
+		file := fs.String("file", "", "release artifact (required)")
+		bnd := fs.String("bundle", "", "release bundle (required)")
+		sb := fs.String("sbom", "", "SBOM file (required)")
+		sbBnd := fs.String("sbom-bundle", "", "SBOM bundle (required)")
+		store := fs.String("trust-store", "", "trust store path (required)")
+		pkg := fs.String("package", "", "expected package name (required)")
+		version := fs.String("version", "", "expected version (required)")
+		asJSON := fs.Bool("json", false, "print the result as one JSON object on stdout")
+		if code, done := parseFlags(fs, args[1:]); done {
+			if code == exitOK {
+				return code
+			}
+			return usageFailure(wantsJSON(args[1:]), stdout)
+		}
+		r := sbom.Verify(sbom.VerifyOptions{
+			File: *file, Bundle: *bnd, SBOM: *sb, SBOMBundle: *sbBnd,
+			TrustStore: *store, Package: *pkg, Version: *version,
+		})
+		if *asJSON {
+			stdout.Write(r.MarshalLine())
+			if !r.Valid {
+				fmt.Fprintf(stderr, "%s (%s): %s\n", r.Status, r.Target, r.Message)
+			}
+		} else if r.Valid {
+			fmt.Fprintf(stdout, "%s: %s\n", r.Status, r.Message)
+		} else {
+			fmt.Fprintf(stderr, "%s (%s): %s\n", r.Status, r.Target, r.Message)
+		}
+		return r.ExitCode()
 	default:
 		fmt.Fprintf(stderr, "error: unknown sbom command %q\n", args[0])
 		return exitInput

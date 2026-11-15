@@ -29,7 +29,7 @@ docker pull ghcr.io/grwna/osiris@sha256:46ea2d15e8dfc66ad4a960356f5d0068e6a08927
 ```
 
 | Program version | GHCR image tag | Image digest |
-|---|---|---|
+|---|---|---|---|
 | `0.1.0` | `0.1.0` | `sha256:46ea2d15e8dfc66ad4a960356f5d0068e6a08927a10efca25a4def037333dcd3` |
 
 The image is published by running [`release.yml`](.github/workflows/release.yml)
@@ -65,7 +65,7 @@ docker run --rm --network none --user "$(id -u):$(id -g)" \
 ## Commands
 
 1. Generate a key pair. This writes `<prefix>.key.pem` (mode `0600`) and
-`<prefix>.pub.pem`:
+`<prefix>.pub.pem`. Overwriting existing key files requires `--force`:
 
 ```sh
 osiris keygen --algorithm ed25519 --out keys/release
@@ -80,7 +80,7 @@ osiris trust list --store ci/trust.json --json
 osiris trust remove --store ci/trust.json --keyid <64-character-keyid>
 ```
 
-3. Sign and verify a release artifact:
+3. Sign and verify a release artifact. Overwriting an existing bundle requires `--force`:
 
 ```sh
 osiris sign --file app.zip --package contoh-app --version 1.0.0 \
@@ -133,7 +133,7 @@ to stderr.
 | Profile | Go standard-library API | Signature representation |
 |---|---|---|
 | `rsa-pss-sha256` | `crypto/rsa.SignPSS` / `VerifyPSS`, SHA-256, MGF1-SHA-256, 32-byte salt | 384 bytes; RSA-3072, exponent 65537 |
-| `ecdsa-p256-sha256` | `crypto/ecdsa.SignASN1` / `VerifyASN1`, SHA-256 | Fixed-width `r || s`, 32 bytes each (64 total) |
+| `ecdsa-p256-sha256` | `crypto/ecdsa.SignASN1` / `VerifyASN1`, SHA-256, nonce from `crypto/rand` | Fixed-width `r || s`, 32 bytes each (64 total) |
 | `ed25519` | `crypto/ed25519.Sign` / `Verify` | 64 bytes; signs the manifest bytes directly |
 
 ## Run locally and repeat tests

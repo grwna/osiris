@@ -6,3 +6,8 @@ bin/
 !tests/keys/*.key.pem
 # Local scratch
 scratch/
+
+# LaTeX artifacts in docs/latex (only track compiled main.pdf)
+docs/latex/**
+!docs/latex/
+!docs/latex/main.pdf

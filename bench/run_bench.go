@@ -111,5 +111,5 @@ func main() {
 	}
 
 	fmt.Println("\n=== Osiris Benchmark Suite Completed Successfully ===")
-	fmt.Printf("Summary markdown written to: %s\n", summaryPath)
+	fmt.Printf("Summary written to: %s\n", summaryPath)
 }

@@ -32,18 +32,21 @@ docker pull ghcr.io/grwna/osiris@sha256:46ea2d15e8dfc66ad4a960356f5d0068e6a08927
 |---|---|---|
 | `0.1.0` | `0.1.0` | `sha256:46ea2d15e8dfc66ad4a960356f5d0068e6a08927a10efca25a4def037333dcd3` |
 
-The image is published by running [`release.yml`](.github/workflows/release.yml) manually (`workflow_dispatch`). 
+The image is published by running [`release.yml`](.github/workflows/release.yml)
+manually (`workflow_dispatch`).
 
 ### Use from CI/CD
 
 The consumer workflow [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml)
-pulls this image and runs it without a TTY or network access. A minimal runner
-job, with the signing key passed through a CI secret file (`SIGNING_KEY_FILE`):
+runs on demand (`workflow_dispatch`), pulls this image, and runs it without a
+TTY or network access. A minimal runner job, with the signing key passed
+through a CI secret file (`SIGNING_KEY_FILE`):
 
 ```sh
 IMAGE=ghcr.io/grwna/osiris@sha256:46ea2d15e8dfc66ad4a960356f5d0068e6a08927a10efca25a4def037333dcd3
 
 set -eu
+: "${SIGNING_KEY_FILE:?mandatory}"
 trap 'rm -f "$SIGNING_KEY_FILE"' EXIT
 docker pull "$IMAGE"
 docker run --rm --network none --user "$(id -u):$(id -g)" \
@@ -61,8 +64,8 @@ docker run --rm --network none --user "$(id -u):$(id -g)" \
 
 ## Commands
 
-1. Generate a key pair. This writes `<algorithm>.key.pem` (mode `0600`) and
-`<algorithm>.pub.pem`:
+1. Generate a key pair. This writes `<prefix>.key.pem` (mode `0600`) and
+`<prefix>.pub.pem`:
 
 ```sh
 osiris keygen --algorithm ed25519 --out keys/release

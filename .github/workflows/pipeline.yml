@@ -37,7 +37,7 @@ jobs:
           set -euo pipefail
           rm -rf dist out
           mkdir -p dist out
-          printf 'osiris CI demo artifact\n' > dist/app.zip
+          (cd docs && zip -q -r ../dist/app.zip .)
           docker pull "$IMAGE"
 
       - name: Sign with CI secret
@@ -68,7 +68,9 @@ jobs:
         run: ./ci/deploy.sh dist/app.zip dist/app.bundle.json out/verification.json
 
       - name: Assert deployment marker
-        run: test -f out/deployed.marker
+        run: |
+          test -f out/deployed.marker
+          test -f out/deployed-site/index.html
 
       - name: C05 container constraints
         run: docker run --rm --network none --user "$(id -u):$(id -g)" "$IMAGE" --version
@@ -110,7 +112,7 @@ jobs:
           set -euo pipefail
           rm -rf dist out
           mkdir -p dist out
-          printf 'osiris CI demo artifact\n' > dist/app.zip
+          (cd docs && zip -q -r ../dist/app.zip .)
           docker pull "$IMAGE"
           key_file="$(mktemp)"
           chmod 600 "$key_file"
@@ -157,3 +159,38 @@ jobs:
         with:
           name: ${{ matrix.id }}-evidence
           path: out/
+
+  deploy-pages:
+    name: Deploy Verified API Docs (GitHub Pages)
+    needs: c01-valid-release
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/feat/') || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download verified release evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: C01-ed25519-evidence
+          path: out/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: out/deployed-site/
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+

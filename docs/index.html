@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, shrink-to-fit=no">
+<link href="assets/images/favicon.png" rel="icon" />
+<title>Osiris | API Documentation v0.1.0</title>
+<meta name="description" content="Programmatic interface documentation for release signing, verification, trust management, and signed SBOM generation in Osiris.">
+<meta name="author" content="Osiris">
+
+<!-- Stylesheet
+============================== -->
+<!-- Bootstrap -->
+<link rel="stylesheet" type="text/css" href="assets/vendor/bootstrap/css/bootstrap.min.css" />
+<!-- Font Awesome Icon -->
+<link rel="stylesheet" type="text/css" href="assets/vendor/font-awesome/css/all.min.css" />
+<!-- Magnific Popup -->
+<link rel="stylesheet" type="text/css" href="assets/vendor/magnific-popup/magnific-popup.min.css" />
+<!-- Highlight Syntax -->
+<link rel="stylesheet" type="text/css" href="assets/vendor/highlight.js/styles/github.css" />
+<!-- Custom Stylesheet -->
+<link rel="stylesheet" type="text/css" href="assets/css/stylesheet.css" />
+</head>
+
+<body data-spy="scroll" data-target=".idocs-navigation" data-offset="125">
+
+<!-- Preloader -->
+<div class="preloader">
+  <div class="lds-ellipsis">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>
+<!-- Preloader End -->
+
+<!-- Document Wrapper
+=============================== -->
+<div id="main-wrapper">
+
+  <!-- Header
+  ============================ -->
+  <header id="header" class="sticky-top">
+    <!-- Navbar -->
+    <nav class="primary-menu navbar navbar-expand-lg bg-dark navbar-text-light navbar-dropdown-dark border-0">
+      <div class="container-fluid">
+        <!-- Sidebar Toggler -->
+		<button id="sidebarCollapse" class="navbar-toggler d-block d-md-none" type="button"><span></span><span class="w-75"></span><span class="w-50"></span></button>
+
+		<!-- Logo -->
+        <a class="logo ml-md-3 text-light font-weight-700" href="#overview" title="Osiris API Reference"> Osiris </a>
+		<span class="text-2 text-light ml-2">v0.1.0</span>
+        <!-- Logo End -->
+
+		<!-- Navbar Toggler -->
+		<button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#header-nav"><span></span><span></span><span></span></button>
+
+        <div id="header-nav" class="collapse navbar-collapse justify-content-end">
+          <ul class="navbar-nav">
+            <li><a target="_blank" href="https://github.com/grwna/osiris">GitHub <i class="fas fa-external-link-alt text-1 ml-1"></i></a></li>
+          </ul>
+        </div>
+        <ul class="social-icons social-icons-sm ml-lg-2 mr-2">
+          <li class="social-icons-github"><a data-toggle="tooltip" href="https://github.com/grwna/osiris" target="_blank" title="" data-original-title="GitHub"><i class="fab fa-github"></i></a></li>
+        </ul>
+      </div>
+    </nav>
+    <!-- Navbar End -->
+  </header>
+  <!-- Header End -->
+
+  <!-- Content
+  ============================ -->
+  <div id="content" role="main">
+
+	<!-- Sidebar Navigation
+	============================ -->
+	<div class="idocs-navigation bg-light">
+      <ul class="nav flex-column ">
+        <li class="nav-item"><a class="nav-link active" href="#overview">Overview</a>
+          <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="#canonical-manifest">Canonical Manifest</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="#pkg-keygen">Core Modules</a>
+          <ul class="nav flex-column">
+			<li class="nav-item"><a class="nav-link" href="#pkg-keygen">internal/keygen</a></li>
+			<li class="nav-item"><a class="nav-link" href="#pkg-crypto">internal/crypto</a></li>
+			<li class="nav-item"><a class="nav-link" href="#pkg-manifest">internal/manifest</a></li>
+			<li class="nav-item"><a class="nav-link" href="#pkg-bundle">internal/bundle</a></li>
+			<li class="nav-item"><a class="nav-link" href="#pkg-sign">internal/sign</a></li>
+			<li class="nav-item"><a class="nav-link" href="#pkg-trust">internal/trust</a></li>
+			<li class="nav-item"><a class="nav-link" href="#pkg-verify">internal/verify</a></li>
+			<li class="nav-item"><a class="nav-link" href="#pkg-sbom">internal/sbom</a></li>
+			<li class="nav-item"><a class="nav-link" href="#pkg-strictjson">internal/strictjson</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="#status-codes">Reference</a>
+			<ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="#status-codes">Status &amp; Exit Codes</a></li>
+            <li class="nav-item"><a class="nav-link" href="#cli-commands">Osiris CLI Commands</a></li>
+            <li class="nav-item"><a class="nav-link" href="#sbom-cli">SBOM CLI Commands</a></li>
+            <li class="nav-item"><a class="nav-link" href="#security-considerations">Security Notes</a></li>
+          </ul>
+		</li>
+      </ul>
+    </div>
+
+    <!-- Docs Content
+	============================ -->
+    <div class="idocs-content">
+      <div class="container">
+
+        <!-- Overview
+		============================ -->
+        <section id="overview">
+        <h1>Osiris API Reference</h1>
+        <h2>Release signing, verification, trust management &amp; signed SBOM</h2>
+        <p class="lead">Programmatic interface documentation for the Osiris Go packages.</p>
+		<hr>
+		<div class="row">
+			<div class="col-sm-6 col-lg-4">
+				<ul class="list-unstyled">
+					<li><strong>Version:</strong> 0.1.0</li>
+					<li><strong>Language:</strong> Go </li>
+				</ul>
+			</div>
+			<div class="col-sm-6 col-lg-4">
+				<ul class="list-unstyled">
+					<li><strong>Source:</strong> <a href="https://github.com/grwna/osiris" target="_blank">github.com/grwna/osiris</a></li>
+					<li><strong>Course:</strong> IF4020 Cryptography</li>
+				</ul>
+			</div>
+		</div>
+        <p class="alert alert-info">Osiris implements deterministic software release signing and verification using standard library Go cryptography. The core verification lifecycle separates hashing, manifest binding, cryptographic signing, and trust evaluation.</p>
+        </section>
+
+		<hr class="divider">
+
+        <!-- Canonical Manifest
+		============================ -->
+        <section id="canonical-manifest">
+          <h2>Canonical Manifest Format</h2>
+          <p>
+            Signatures are calculated over canonical manifest bytes (schema <code>minisign-manifest/v1</code>).
+            The manifest binds package name, version, signing profile, public key fingerprint (KeyID), and artifact SHA-256 into a sorted JSON structure without extraneous whitespace:
+          </p>
+          <pre><code class="json">{"schema":"minisign-manifest/v1","package":"contoh-app","version":"1.0.0","algorithm":"ed25519","keyid":"ac18e2e7f6b47fb4473b6b9d9df671587602a2f448fdb2b951809a7d7521324a","artifact":{"name":"app.zip","size":7240,"sha256":"4d82f7c001ec4cf32646d616d6ee477ea002a2818a7c645ec266ef61014e305e"}}</code></pre>
+          <p>
+            During verification, the parsed manifest is re-encoded using the identical canonical encoder and compared byte-for-byte against the original manifest payload.
+            Any reordering of keys or whitespace differences causes verification to reject the manifest with <code>FORMAT_ERROR</code>.
+          </p>
+        </section>
+
+		<hr class="divider">
+
+        <!-- internal/keygen
+		============================ -->
+        <section id="pkg-keygen">
+          <h2>Package <code>internal/keygen</code></h2>
+          <p>Handles cryptographic key pair generation and disk export for the CLI.</p>
+
+          <h4>Types</h4>
+          <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Type Name</th><th>Kind</th><th>Fields / Definition</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Options</code></td>
+                <td><code>struct</code></td>
+                <td>
+                  <code>Algorithm string</code><br>
+                  <code>OutPrefix string</code><br>
+                  <code>Force bool</code>
+                </td>
+                <td>Key generation parameters. <code>OutPrefix</code> sets the path prefix for <code>.key.pem</code> and <code>.pub.pem</code>.</td>
+              </tr>
+              <tr>
+                <td><code>Result</code></td>
+                <td><code>struct</code></td>
+                <td>
+                  <code>Profile crypto.Profile</code><br>
+                  <code>KeyID string</code><br>
+                  <code>PrivatePath string</code><br>
+                  <code>PublicPath string</code>
+                </td>
+                <td>Key generation output detailing the algorithm profile, fingerprint, and output file paths.</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h4>Functions</h4>
+          <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Function</th><th>Input Parameters</th><th>Return Values</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Run</code></td>
+                <td><code>o Options</code></td>
+                <td><code>*Result, error</code></td>
+                <td>Generates a key pair according to <code>o.Algorithm</code>, writes private key (permissions <code>0600</code>) and public key (<code>0644</code>), returning the key metadata.</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h4>Usage Example</h4>
+          <pre><code class="go">res, err := keygen.Run(keygen.Options{
+    Algorithm: "ed25519",
+    OutPrefix: "keys/release",
+    Force:     false,
+})
+if err != nil {
+    log.Fatalf("keygen failed: %v", err)
+}
+fmt.Printf("Generated %s key with KeyID %s\n", res.Profile, res.KeyID)</code></pre>
+        </section>
+
+		<hr class="divider">
+
+        <!-- internal/crypto
+		============================ -->
+        <section id="pkg-crypto">
+          <h2>Package <code>internal/crypto</code></h2>
+          <p>Implements cryptographic primitives and key serialization for the three supported algorithm profiles.</p>
+
+          <h4>Constants &amp; Types</h4>
+          <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Identifier</th><th>Type</th><th>Value</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>RSAPSS</code></td><td><code>Profile</code></td><td><code>"rsa-pss-sha256"</code></td><td>RSA-PSS 3072-bit, e=65537, salt=32, SHA-256</td></tr>
+              <tr><td><code>ECDSAP256</code></td><td><code>Profile</code></td><td><code>"ecdsa-p256-sha256"</code></td><td>ECDSA NIST P-256, SHA-256, raw 64-byte r||s</td></tr>
+              <tr><td><code>Ed25519</code></td><td><code>Profile</code></td><td><code>"ed25519"</code></td><td>Ed25519 (RFC 8032)</td></tr>
+              <tr><td><code>RSAKeyBits</code></td><td><code>int</code></td><td><code>3072</code></td><td>Required modulus size for RSA keys</td></tr>
+              <tr><td><code>RSASigLen</code></td><td><code>int</code></td><td><code>384</code></td><td>Signature byte length for RSA-PSS 3072</td></tr>
+              <tr><td><code>ECDSASigLen</code></td><td><code>int</code></td><td><code>64</code></td><td>Raw signature byte length for ECDSA P-256</td></tr>
+              <tr><td><code>Ed25519SigLen</code></td><td><code>int</code></td><td><code>64</code></td><td>Signature byte length for Ed25519</td></tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h4>Functions</h4>
+          <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Function</th><th>Input Parameters</th><th>Return Values</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>GenerateKey</code></td>
+                <td><code>p Profile</code></td>
+                <td><code>privPEM, pubPEM []byte, keyid string, err error</code></td>
+                <td>Generates a keypair encoded as PKCS#8 PEM (private) and SPKI PEM (public).</td>
+              </tr>
+              <tr>
+                <td><code>Sign</code></td>
+                <td><code>p Profile, priv crypto.Signer, M []byte</code></td>
+                <td><code>[]byte, error</code></td>
+                <td>Signs message bytes <code>M</code> with the private key. ECDSA signatures are converted to raw 64-byte <code>r || s</code> format.</td>
+              </tr>
+              <tr>
+                <td><code>Verify</code></td>
+                <td><code>p Profile, pub crypto.PublicKey, M, sig []byte</code></td>
+                <td><code>bool</code></td>
+                <td>Verifies signature over message bytes <code>M</code> using public key <code>pub</code>. Returns false on signature or length mismatch without panicking.</td>
+              </tr>
+              <tr>
+                <td><code>KeyID</code></td>
+                <td><code>spkiDER []byte</code></td>
+                <td><code>string</code></td>
+                <td>Returns the 64-character lowercase hex SHA-256 digest of SubjectPublicKeyInfo DER bytes.</td>
+              </tr>
+              <tr>
+                <td><code>PublicKeyID</code></td>
+                <td><code>pub crypto.PublicKey</code></td>
+                <td><code>string, error</code></td>
+                <td>Exports public key to SPKI DER and computes its KeyID.</td>
+              </tr>
+              <tr>
+                <td><code>ParsePrivateKeyPEM</code></td>
+                <td><code>data []byte</code></td>
+                <td><code>Profile, crypto.Signer, error</code></td>
+                <td>Parses unencrypted PKCS#8 PEM private key. Intermediate DER memory is cleared after parsing.</td>
+              </tr>
+              <tr>
+                <td><code>ParsePublicKeyPEM</code></td>
+                <td><code>data []byte</code></td>
+                <td><code>Profile, crypto.PublicKey, string, error</code></td>
+                <td>Parses SPKI PEM public key and returns its profile, public key, and KeyID.</td>
+              </tr>
+              <tr>
+                <td><code>ParseProfile</code></td>
+                <td><code>s string</code></td>
+                <td><code>Profile, error</code></td>
+                <td>Validates whether a string matches one of the three supported algorithm profiles.</td>
+              </tr>
+              <tr>
+                <td><code>DERToRS</code></td>
+                <td><code>der []byte</code></td>
+                <td><code>[]byte, error</code></td>
+                <td>Converts an ASN.1 DER ECDSA signature to 64-byte big-endian <code>r || s</code>.</td>
+              </tr>
+              <tr>
+                <td><code>RSToDER</code></td>
+                <td><code>rs []byte</code></td>
+                <td><code>[]byte, error</code></td>
+                <td>Converts 64-byte <code>r || s</code> signature to ASN.1 DER sequence.</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h4>Usage Example</h4>
+          <pre><code class="go">privPEM, pubPEM, keyid, err := crypto.GenerateKey(crypto.Ed25519)
+if err != nil {
+    log.Fatal(err)
+}
+
+prof, signer, err := crypto.ParsePrivateKeyPEM(privPEM)
+if err != nil {
+    log.Fatal(err)
+}
+
+_, pubKey, pubKeyID, err := crypto.ParsePublicKeyPEM(pubPEM)
+if err != nil || pubKeyID != keyid {
+    log.Fatal("public key mismatch")
+}
+
+msg := []byte("payload to sign")
+sig, err := crypto.Sign(prof, signer, msg)
+if err != nil {
+    log.Fatal(err)
+}
+
+if !crypto.Verify(prof, pubKey, msg, sig) {
+    log.Fatal("verification failed")
+}</code></pre>
+        </section>
+
+		<hr class="divider">
+
+        <!-- internal/manifest
+		============================ -->
+        <section id="pkg-manifest">
+          <h2>Package <code>internal/manifest</code></h2>
+          <p>Defines the canonical manifest schema, validation constraints, and deterministic JSON serialization.</p>
+
+          <h4>Types</h4>
+          <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Type Name</th><th>Kind</th><th>Fields</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Artifact</code></td>
+                <td><code>struct</code></td>
+                <td>
+                  <code>Name string</code><br>
+                  <code>Size int64</code><br>
+                  <code>SHA256 string</code>
+                </td>
+                <td>Artifact metadata descriptor. <code>Size</code> is constrained between 0 and 2<sup>53</sup>-1.</td>
+              </tr>
+              <tr>
+                <td><code>Manifest</code></td>
+                <td><code>struct</code></td>
+                <td>
+                  <code>Schema string</code><br>
+                  <code>Package string</code><br>
+                  <code>Version string</code><br>
+                  <code>Algorithm string</code><br>
+                  <code>KeyID string</code><br>
+                  <code>Artifact Artifact</code>
+                </td>
+                <td>Top-level manifest data binding release identification to artifact digest.</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h4>Functions &amp; Methods</h4>
+          <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Signature</th><th>Input Parameters</th><th>Return Values</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>New</code></td>
+                <td><code>pkg, ver string, p crypto.Profile, keyid, name string, size int64, sha string</code></td>
+                <td><code>Manifest</code></td>
+                <td>Constructs a Manifest struct.</td>
+              </tr>
+              <tr>
+                <td><code>(m Manifest) Validate</code></td>
+                <td><code>-</code></td>
+                <td><code>error</code></td>
+                <td>Checks schema string, package regex, version regex, artifact filename pattern, and hex digest format.</td>
+              </tr>
+              <tr>
+                <td><code>Serialize</code></td>
+                <td><code>m Manifest</code></td>
+                <td><code>[]byte, error</code></td>
+                <td>Validates the manifest and serializes to canonical JSON bytes under 16 KiB limit.</td>
+              </tr>
+              <tr>
+                <td><code>ParseStrict</code></td>
+                <td><code>M []byte</code></td>
+                <td><code>Manifest, error</code></td>
+                <td>Parses manifest JSON, verifies field invariants, and checks byte-for-byte equality against re-encoded canonical output.</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        </section>
+
+		<hr class="divider">
+
+        <!-- internal/bundle
+		============================ -->
+        <section id="pkg-bundle">
+          <h2>Package <code>internal/bundle</code></h2>
+          <p>Handles reading, writing, and parsing of <code>minisign-bundle/v1</code> release envelope files.</p>
+
+          <h4>Types</h4>
+          <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Type Name</th><th>Fields</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Bundle</code></td>
+                <td>
+                  <code>Schema string `json:"schema"`</code><br>
+                  <code>ManifestB64 string `json:"manifest_b64"`</code><br>
+                  <code>SignatureB64 string `json:"signature_b64"`</code>
+                </td>
+                <td>JSON container holding base64-encoded manifest bytes and base64-encoded signature.</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h4>Functions</h4>
+          <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Function</th><th>Input Parameters</th><th>Return Values</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Marshal</code></td>
+                <td><code>manifestBytes, sig []byte</code></td>
+                <td><code>[]byte, error</code></td>
+                <td>Encodes manifest and signature into indented bundle JSON under 64 KiB.</td>
+              </tr>
+              <tr>
+                <td><code>Write</code></td>
+                <td><code>path string, manifestBytes, sig []byte, overwrite bool</code></td>
+                <td><code>error</code></td>
+                <td>Writes bundle JSON atomically via temporary file and rename. Fails if file exists unless <code>overwrite</code> is true.</td>
+              </tr>
+              <tr>
+                <td><code>Parse</code></td>
+                <td><code>data []byte</code></td>
+                <td><code>M, sig []byte, err error</code></td>
+                <td>Parses bundle JSON with strict base64 decoding (rejecting invalid padding and non-zero trailing bits).</td>
+              </tr>
+              <tr>
+                <td><code>ReadFile</code></td>
+                <td><code>path string</code></td>
+                <td><code>[]byte, error</code></td>
+                <td>Reads bundle file into memory, returning <code>InputError</code> if missing and <code>FormatError</code> if exceeding 64 KiB.</td>
+              </tr>
+              <tr>
+                <td><code>ParseFile</code></td>
+                <td><code>path string</code></td>
+                <td><code>M, sig []byte, err error</code></td>
+                <td>Combines <code>ReadFile</code> and <code>Parse</code>.</td>
+              </tr>
+              <tr>
+                <td><code>DecodeBase64Strict</code></td>
+                <td><code>s string</code></td>
+                <td><code>[]byte, error</code></td>
+                <td>Decodes standard base64 string, enforcing strict canonical encoding.</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h4>Usage Example</h4>
+          <pre><code class="go">// Round-trip bundle marshaling and parsing
+bundleBytes, err := bundle.Marshal(manifestBytes, signatureBytes)
+if err != nil {
+    log.Fatal(err)
+}
+
+parsedManifest, parsedSig, err := bundle.Parse(bundleBytes)
+if err != nil {
+    log.Fatalf("bundle parse failed: %v", err)
+}</code></pre>
+        </section>
+
+		<hr class="divider">
+
+        <!-- internal/sign
+		============================ -->
+        <section id="pkg-sign">
+          <h2>Package <code>internal/sign</code></h2>
+          <p>High-level signing orchestrator that hashes files, serializes manifests, generates signatures, and writes release bundles.</p>
+
+          <h4>Types</h4>
+          <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Type Name</th><th>Fields</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Options</code></td>
+                <td>
+                  <code>File string</code><br>
+                  <code>Package string</code><br>
+                  <code>Version string</code><br>
+                  <code>KeyPath string</code><br>
+                  <code>OutPath string</code><br>
+                  <code>Force bool</code>
+                </td>
+                <td>Signing options supplied via CLI flags or programmatic invocation.</td>
+              </tr>
+              <tr>
+                <td><code>Result</code></td>
+                <td>
+                  <code>Profile crypto.Profile</code><br>
+                  <code>KeyID string</code><br>
+                  <code>Manifest []byte</code><br>
+                  <code>Bundle string</code><br>
+                  <code>Warnings []string</code>
+                </td>
+                <td>Signing result containing generated manifest bytes, output bundle path, and non-fatal warnings.</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h4>Functions</h4>
+          <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Function</th><th>Input Parameters</th><th>Return Values</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Run</code></td>
+                <td><code>o Options</code></td>
+                <td><code>*Result, error</code></td>
+                <td>Performs streaming SHA-256 hash of artifact, constructs canonical manifest, signs it, self-verifies result, and atomically writes the bundle.</td>
+              </tr>
+              <tr>
+                <td><code>HashFile</code></td>
+                <td><code>path string</code></td>
+                <td><code>int64, string, error</code></td>
+                <td>Computes artifact byte size and lowercase hex SHA-256 digest via buffered stream.</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        </section>
+
+		<hr class="divider">
+
+        <!-- internal/trust
+		============================ -->
+        <section id="pkg-trust">
+          <h2>Package <code>internal/trust</code></h2>
+          <p>Manages the <code>minisign-trust/v1</code> store of authorized public keys and allowed package associations.</p>
+
+          <h4>Types</h4>
+          <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Type Name</th><th>Fields</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Entry</code></td>
+                <td>
+                  <code>KeyID string</code><br>
+                  <code>Algorithm crypto.Profile</code><br>
+                  <code>PublicKeyPEM string</code><br>
+                  <code>Packages []string</code><br>
+                  <code>PublicKey crypto.PublicKey</code>
+                </td>
+                <td>A trusted public key record authorizing specific package names.</td>
+              </tr>
+              <tr>
+                <td><code>Store</code></td>
+                <td><code>Keys []*Entry</code></td>
+                <td>In-memory collection of trusted key entries. Maximum store size is 1 MiB.</td>
+              </tr>
+              <tr>
+                <td><code>AddResult</code></td>
+                <td>
+                  <code>Entry *Entry</code><br>
+                  <code>Created bool</code><br>
+                  <code>AddedPackages []string</code>
+                </td>
+                <td>Report of added or merged packages returned by <code>Store.Add</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h4>Functions &amp; Methods</h4>
+          <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Signature</th><th>Input Parameters</th><th>Return Values</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Load</code></td>
+                <td><code>path string</code></td>
+                <td><code>*Store, error</code></td>
+                <td>Loads trust store from disk. Returns <code>InputError</code> if missing and <code>FormatError</code> if corrupt.</td>
+              </tr>
+              <tr>
+                <td><code>LoadOrEmpty</code></td>
+                <td><code>path string</code></td>
+                <td><code>s *Store, existed bool, err error</code></td>
+                <td>Loads trust store if present; otherwise returns a new empty store (used by <code>trust add</code>).</td>
+              </tr>
+              <tr>
+                <td><code>Parse</code></td>
+                <td><code>data []byte</code></td>
+                <td><code>*Store, error</code></td>
+                <td>Parses trust store JSON, verifying that key IDs match public key SHA-256 fingerprints.</td>
+              </tr>
+              <tr>
+                <td><code>Save</code></td>
+                <td><code>path string, s *Store</code></td>
+                <td><code>error</code></td>
+                <td>Validates store entries and writes atomically to path.</td>
+              </tr>
+              <tr>
+                <td><code>(s *Store) Add</code></td>
+                <td><code>pubPEM []byte, packages []string</code></td>
+                <td><code>AddResult, error</code></td>
+                <td>Adds a public key or merges packages into an existing key entry (idempotent operation).</td>
+              </tr>
+              <tr>
+                <td><code>(s *Store) Remove</code></td>
+                <td><code>keyid string, packages []string</code></td>
+                <td><code>removedEntry bool, err error</code></td>
+                <td>Removes specific packages from an entry, or removes the entry entirely if <code>packages</code> is empty.</td>
+              </tr>
+              <tr>
+                <td><code>(s *Store) Lookup</code></td>
+                <td><code>keyid string</code></td>
+                <td><code>*Entry, bool</code></td>
+                <td>Finds a trusted key entry by exact 64-character KeyID match.</td>
+              </tr>
+              <tr>
+                <td><code>(e *Entry) Allows</code></td>
+                <td><code>pkg string</code></td>
+                <td><code>bool</code></td>
+                <td>Checks whether package <code>pkg</code> is listed in the entry's authorized packages list.</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h4>Usage Example</h4>
+          <pre><code class="go">store, _, err := trust.LoadOrEmpty("trust.json")
+if err != nil {
+    log.Fatal(err)
+}
+
+addRes, err := store.Add(pubPEM, []string{"contoh-app"})
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Printf("Key %s updated: %v\n", addRes.Entry.KeyID, addRes.Changed())
+
+entry, found := store.Lookup(addRes.Entry.KeyID)
+if !found || !entry.Allows("contoh-app") {
+    log.Fatal("package not allowed")
+}</code></pre>
+        </section>
+
+		<hr class="divider">
+
+        <!-- internal/verify
+		============================ -->
+        <section id="pkg-verify">
+          <h2>Package <code>internal/verify</code></h2>
+          <p>Executes the 8-stage verification pipeline and formats structured JSON output.</p>
+
+          <h4>Types</h4>
+          <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Type Name</th><th>Fields</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Options</code></td>
+                <td>
+                  <code>File string</code><br>
+                  <code>Bundle string</code><br>
+                  <code>TrustStore string</code><br>
+                  <code>Package string</code><br>
+                  <code>Version string</code>
+                </td>
+                <td>Inputs required for release verification.</td>
+              </tr>
+              <tr>
+                <td><code>Result</code></td>
+                <td>
+                  <code>Valid bool `json:"valid"`</code><br>
+                  <code>Status Status `json:"status"`</code><br>
+                  <code>Message string `json:"message"`</code><br>
+                  <code>Algorithm *string `json:"algorithm"`</code><br>
+                  <code>KeyID *string `json:"keyid"`</code><br>
+                  <code>Package *string `json:"package"`</code><br>
+                  <code>Version *string `json:"version"`</code><br>
+                  <code>Manifest *manifest.Manifest `json:"-"`</code>
+                </td>
+                <td>Verification evaluation output. Fields from the manifest are set to null if stages 1-3 fail.</td>
+              </tr>
+              <tr>
+                <td><code>Status</code></td>
+                <td><code>string</code></td>
+                <td>Status enum identifier indicating check result.</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h4>Functions &amp; Methods</h4>
+          <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Signature</th><th>Input Parameters</th><th>Return Values</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Release</code></td>
+                <td><code>o Options</code></td>
+                <td><code>*Result</code></td>
+                <td>Executes the 8-stage verification pipeline over the release artifact, bundle, and trust store.</td>
+              </tr>
+              <tr>
+                <td><code>(r *Result) ExitCode</code></td>
+                <td><code>-</code></td>
+                <td><code>int</code></td>
+                <td>Returns 0 for OK, 2 for INPUT_ERROR, and 1 for verification rejections.</td>
+              </tr>
+              <tr>
+                <td><code>(r *Result) MarshalLine</code></td>
+                <td><code>-</code></td>
+                <td><code>[]byte</code></td>
+                <td>Formats result as a single JSON object terminated by a newline character.</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h4>Usage Example</h4>
+          <pre><code class="go">res := verify.Release(verify.Options{
+    File:       "dist/app.zip",
+    Bundle:     "dist/app.bundle.json",
+    TrustStore: "ci/trust.json",
+    Package:    "contoh-app",
+    Version:    "1.0.0",
+})
+
+fmt.Printf("Exit code %d: %s (%s)\n", res.ExitCode(), res.Status, res.Message)
+if !res.Valid {
+    os.Exit(res.ExitCode())
+}</code></pre>
+        </section>
+
+		<hr class="divider">
+
+        <!-- internal/sbom
+		============================ -->
+        <section id="pkg-sbom">
+          <h2>Package <code>internal/sbom</code></h2>
+          <p>Generates, signs, and verifies CycloneDX v1.5 JSON Software Bill of Materials (SBOM) bound to the artifact SHA-256 digest.</p>
+
+          <h4>Functions</h4>
+          <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Function</th><th>Input Parameters</th><th>Return Values</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Generate</code></td>
+                <td><code>o GenerateOptions</code></td>
+                <td><code>error</code></td>
+                <td>Builds CycloneDX JSON SBOM containing the release artifact's filename and SHA-256 hash.</td>
+              </tr>
+              <tr>
+                <td><code>Sign</code></td>
+                <td><code>o SignOptions</code></td>
+                <td><code>*sign.Result, error</code></td>
+                <td>Signs canonical SBOM bytes with private key and writes output bundle.</td>
+              </tr>
+              <tr>
+                <td><code>Verify</code></td>
+                <td><code>o VerifyOptions</code></td>
+                <td><code>*VerifyResult</code></td>
+                <td>Verifies both release and SBOM bundles, ensuring the SBOM references the release artifact SHA-256.</td>
+              </tr>
+              <tr>
+                <td><code>References</code></td>
+                <td><code>data []byte, sha256hex string</code></td>
+                <td><code>bool, error</code></td>
+                <td>Inspects the parsed SBOM JSON to check whether any string value in the document matches <code>sha256hex</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        </section>
+
+		<hr class="divider">
+
+        <!-- internal/strictjson
+		============================ -->
+        <section id="pkg-strictjson">
+          <h2>Package <code>internal/strictjson</code></h2>
+          <p>Strict RFC 8259 JSON parser that rejects duplicate object keys and enforces integer limits.</p>
+
+          <h4>Types &amp; Methods</h4>
+          <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Signature</th><th>Input Parameters</th><th>Return Values</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Parse</code></td>
+                <td><code>data []byte</code></td>
+                <td><code>Value, error</code></td>
+                <td>Parses exactly one JSON value. Fails on trailing data or duplicate object keys.</td>
+              </tr>
+              <tr>
+                <td><code>ParseObject</code></td>
+                <td><code>data []byte</code></td>
+                <td><code>*Obj, error</code></td>
+                <td>Parses JSON text directly into an object representation.</td>
+              </tr>
+              <tr>
+                <td><code>(o *Obj) ExpectFields</code></td>
+                <td><code>where string, keys ...string</code></td>
+                <td><code>error</code></td>
+                <td>Enforces that an object contains exactly the specified keys, with none missing and no unexpected keys.</td>
+              </tr>
+              <tr>
+                <td><code>(o *Obj) String</code></td>
+                <td><code>key string</code></td>
+                <td><code>string, error</code></td>
+                <td>Extracts a string property, returning an error on missing field or incorrect type.</td>
+              </tr>
+              <tr>
+                <td><code>(o *Obj) Integer</code></td>
+                <td><code>key string</code></td>
+                <td><code>int64, error</code></td>
+                <td>Extracts an integer property matching <code>^(0|[1-9][0-9]*)$</code> up to 2<sup>53</sup>-1.</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        </section>
+
+		<hr class="divider">
+
+        <!-- Status & Exit Codes
+		============================ -->
+        <section id="status-codes">
+          <h2>Status &amp; Exit Codes</h2>
+          <p>The verification pipeline stops at the first encountered failure and emits a standard status string and exit code:</p>
+          <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Status</th><th>Exit Code</th><th>Description</th><th>Trigger Example</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>OK</code></td><td>0</td><td>Release verified successfully.</td><td>Valid signature, matching hash, authorized key.</td></tr>
+              <tr><td><code>INPUT_ERROR</code></td><td>2</td><td>Missing files, bad paths, or invalid CLI parameters.</td><td>Artifact path does not exist.</td></tr>
+              <tr><td><code>FORMAT_ERROR</code></td><td>1</td><td>Schema invalid, duplicate JSON keys, or corrupted trust store.</td><td>Manifest contains duplicate keys or non-canonical formatting.</td></tr>
+              <tr><td><code>UNSUPPORTED_ALGORITHM</code></td><td>1</td><td>Manifest algorithm is not one of the 3 locked profiles.</td><td>Manifest specifies algorithm <code>"ed448"</code>.</td></tr>
+              <tr><td><code>KEY_NOT_TRUSTED</code></td><td>1</td><td>KeyID missing from trust store or package unauthorized.</td><td>Key entry does not allow specified package.</td></tr>
+              <tr><td><code>INVALID_SIGNATURE</code></td><td>1</td><td>Signature does not verify over manifest bytes.</td><td>Signature bit flipped or manifest version altered.</td></tr>
+              <tr><td><code>METADATA_MISMATCH</code></td><td>1</td><td>Manifest package, version, or filename does not match expected flags.</td><td>Verified package name differs from expected name.</td></tr>
+              <tr><td><code>ARTIFACT_MISMATCH</code></td><td>1</td><td>Artifact byte digest does not match manifest SHA-256.</td><td>1 byte modified in artifact after signing.</td></tr>
+            </tbody>
+          </table>
+          </div>
+        </section>
+
+		<hr class="divider">
+
+        <!-- Osiris CLI Commands
+		============================ -->
+        <section id="cli-commands">
+          <h2>Osiris CLI Commands</h2>
+          <p>Top-level commands exposed by the <code>osiris</code> binary (Tabel 2.7 in the project specification):</p>
+          <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Command</th><th>Required Flags</th><th>Output / Side Effect</th><th>Exit Code</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>keygen</code></td>
+                <td><code>--algorithm &lt;rsa-pss-sha256|ecdsa-p256-sha256|ed25519&gt;</code>, <code>--out &lt;prefix&gt;</code></td>
+                <td>Writes <code>&lt;prefix&gt;.key.pem</code> (0600) and <code>&lt;prefix&gt;.pub.pem</code> (0644), prints the public-key fingerprint.</td>
+                <td>0: success<br>2: usage or I/O error</td>
+              </tr>
+              <tr>
+                <td><code>sign</code></td>
+                <td><code>--file</code>, <code>--package</code>, <code>--version</code>, <code>--key</code>, <code>--out</code></td>
+                <td>Hashes the artifact, builds and signs the manifest, writes bundle JSON to <code>--out</code>.</td>
+                <td>0: success<br>2: usage or I/O error</td>
+              </tr>
+              <tr>
+                <td><code>verify</code></td>
+                <td><code>--file</code>, <code>--bundle</code>, <code>--trust-store</code>, <code>--package</code>, <code>--version</code></td>
+                <td>Runs the verification pipeline and prints the result; <code>--json</code> emits machine-readable JSON to stdout.</td>
+                <td>0: all checks passed<br>1: verification rejected<br>2: usage or I/O error</td>
+              </tr>
+              <tr>
+                <td><code>trust add</code></td>
+                <td><code>--key &lt;public.pem&gt;</code>, <code>--package</code>, <code>--store</code></td>
+                <td>Adds the public key or merges packages into its existing entry; creates the trust store if missing. Optional: <code>--expect-keyid</code>, repeatable <code>--package</code>.</td>
+                <td>0: success<br>2: usage or I/O error</td>
+              </tr>
+              <tr>
+                <td><code>trust list</code></td>
+                <td><code>--store</code></td>
+                <td>Prints all trusted-key entries to stdout; <code>--json</code> emits machine-readable JSON.</td>
+                <td>0: success<br>2: usage or I/O error</td>
+              </tr>
+              <tr>
+                <td><code>trust remove</code></td>
+                <td><code>--keyid</code>, <code>--store</code></td>
+                <td>Removes the entry matching <code>--keyid</code>, or only one package with repeatable <code>--package</code>.</td>
+                <td>0: success<br>2: usage or I/O error</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        </section>
+
+		<hr class="divider">
+
+        <!-- SBOM CLI Commands
+		============================ -->
+        <section id="sbom-cli">
+          <h2>SBOM CLI Commands</h2>
+          <p>The <code>osiris sbom</code> subcommand group supports signed Software Bill of Materials operations:</p>
+          <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr><th>Subcommand</th><th>Required Flags</th><th>Output / Side Effect</th><th>Exit Code</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>sbom generate</code></td>
+                <td><code>--file &lt;artifact&gt; --package &lt;name&gt; --version &lt;ver&gt; --out &lt;sbom.json&gt;</code></td>
+                <td>Writes CycloneDX v1.5 JSON containing artifact SHA-256 digest.</td>
+                <td>0: success<br>2: usage or I/O error</td>
+              </tr>
+              <tr>
+                <td><code>sbom sign</code></td>
+                <td><code>--sbom &lt;sbom.json&gt; --file &lt;artifact&gt; --package &lt;name&gt; --version &lt;ver&gt; --key &lt;key.pem&gt; --out &lt;bundle.json&gt;</code></td>
+                <td>Generates and signs minisign bundle for the SBOM.</td>
+                <td>0: success<br>2: usage or I/O error</td>
+              </tr>
+              <tr>
+                <td><code>sbom verify</code></td>
+                <td><code>--file &lt;artifact&gt; --bundle &lt;bnd&gt; --sbom &lt;sbom.json&gt; --sbom-bundle &lt;sbnd&gt; --trust-store &lt;trust.json&gt; --package &lt;name&gt; --version &lt;ver&gt; [--json]</code></td>
+                <td>Verifies artifact and SBOM bundles, asserting SBOM references artifact hash. Emits JSON on stdout.</td>
+                <td>0: success<br>1: verification rejected<br>2: usage or I/O error</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        </section>
+
+		<hr class="divider">
+
+        <!-- Security Notes
+		============================ -->
+        <section id="security-considerations">
+          <h2>Security Notes</h2>
+          <ul>
+            <li><strong>Memory clearing:</strong> Private key DER bytes parsed from PKCS#8 PEM blocks are wiped from memory via <code>clear(der)</code> immediately after decoding.</li>
+            <li><strong>Strict size limits:</strong> Input buffers are capped (manifest: 16 KiB, bundle: 64 KiB, trust store: 1 MiB, SBOM: 16 MiB) to prevent memory exhaustion attacks.</li>
+            <li><strong>Canonical serialization:</strong> Manifests are serialized with sorted JSON keys and no extra whitespace. Verification checks canonical equality byte-for-byte.</li>
+            <li><strong>No auto-trust:</strong> The verification command is read-only and never modifies the trust store. Public keys must be explicitly added via <code>osiris trust add</code>.</li>
+          </ul>
+        </section>
+
+      </div>
+    </div>
+
+  </div>
+  <!-- Content end -->
+
+  <!-- Footer
+  ============================ -->
+  <footer id="footer" class="section bg-dark footer-text-light">
+    <div class="container">
+      <p class="text-center mb-0">Osiris &bull; Cryptographic Release Signer &bull; IF4020 Kriptografi</p>
+	  <p class="text-2 text-center mb-0"><a class="btn-link" target="_blank" href="https://github.com/grwna/osiris">GitHub</a></p>
+    </div>
+  </footer>
+  <!-- Footer end -->
+
+</div>
+<!-- Document Wrapper end -->
+
+<!-- Back To Top -->
+<a id="back-to-top" data-toggle="tooltip" title="Back to Top" href="javascript:void(0)"><i class="fa fa-chevron-up"></i></a>
+
+<!-- JavaScript
+============================ -->
+<script src="assets/vendor/jquery/jquery.min.js"></script>
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Highlight JS -->
+<script src="assets/vendor/highlight.js/highlight.min.js"></script>
+<!-- Easing -->
+<script src="assets/vendor/jquery.easing/jquery.easing.min.js"></script>
+<!-- Magnific Popup -->
+<script src="assets/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
+<!-- Custom Script -->
+<script src="assets/js/theme.js"></script>
+</body>
+</html>

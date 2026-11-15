@@ -151,3 +151,14 @@ bash tests/interop/run_interop.sh
 Integration-test runs and their outputs are recorded in
 [`tests/evidence/README.md`](tests/evidence/README.md); the workflow itself is
 [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml).
+
+## API Documentation
+
+Hosted on GitHub Pages: [https://grwna.github.io/osiris/](https://grwna.github.io/osiris/)  
+Local source: [`docs/index.html`](docs/index.html)
+
+## Credits
+
+- Documentation site template: [iDocs - One Page Documentation HTML Template](https://themeforest.net/user/harnishdesign/portfolio) by [HarnishDesign](https://www.harnishdesign.net/).
+- Built with [Bootstrap](https://getbootstrap.com/), [jQuery](https://jquery.com/), [highlight.js](https://highlightjs.org/), [Magnific Popup](https://dimsemenov.com/plugins/magnific-popup/), and [Font Awesome](https://fontawesome.com/).
+

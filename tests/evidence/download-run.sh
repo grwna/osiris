@@ -38,6 +38,7 @@ for artifact in "$tmp_dir"/*; do
     C02-evidence) target="$destination/C02" ;;
     C03-evidence) target="$destination/C03" ;;
     C04-evidence) target="$destination/C04" ;;
+    github-pages) continue ;;
     *)
       echo "unrecognized artifact name: $artifact_name" >&2
       exit 1

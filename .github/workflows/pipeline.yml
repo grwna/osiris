@@ -1,0 +1,159 @@
+name: Consumer pipeline
+
+on:
+  push:
+    branches: ['feat/**']
+  workflow_dispatch:
+
+env:
+  IMAGE: ghcr.io/grwna/osiris@sha256:46ea2d15e8dfc66ad4a960356f5d0068e6a08927a10efca25a4def037333dcd3
+  DEMO_PACKAGE: contoh-app
+  DEMO_VERSION: 1.0.0
+
+jobs:
+  c01-valid-release:
+    name: C01 (${{ matrix.algorithm }})
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - algorithm: rsa-pss-sha256
+            secret: SIGNING_KEY_RSA
+          - algorithm: ecdsa-p256-sha256
+            secret: SIGNING_KEY_ECDSA
+          - algorithm: ed25519
+            secret: SIGNING_KEY_ED25519
+    env:
+      SIGNING_KEY: ${{ secrets[matrix.secret] }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare artifact and pull pinned image
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf dist out
+          mkdir -p dist out
+          printf 'osiris CI demo artifact\n' > dist/app.zip
+          docker pull "$IMAGE"
+
+      - name: Sign with CI secret
+        shell: bash
+        run: |
+          set -euo pipefail
+          key_file="$(mktemp)"
+          chmod 600 "$key_file"
+          trap 'rm -f "$key_file"' EXIT
+          printf '%s' "$SIGNING_KEY" > "$key_file"
+          docker run --rm --network none --user "$(id -u):$(id -g)" \
+            -v "$GITHUB_WORKSPACE:/w" -v "$key_file:/key:ro" "$IMAGE" \
+            sign --file /w/dist/app.zip --package "$DEMO_PACKAGE" --version "$DEMO_VERSION" \
+            --key /key --out /w/dist/app.bundle.json
+
+      - name: Verify without private key
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm --network none --user "$(id -u):$(id -g)" \
+            -v "$GITHUB_WORKSPACE:/w" "$IMAGE" \
+            verify --file /w/dist/app.zip --bundle /w/dist/app.bundle.json \
+            --trust-store /w/ci/trust.json --package "$DEMO_PACKAGE" --version "$DEMO_VERSION" --json \
+            | tee out/verification.json
+          grep -F '"valid":true,"status":"OK"' out/verification.json
+
+      - name: Deploy verified release
+        run: ./ci/deploy.sh dist/app.zip dist/app.bundle.json out/verification.json
+
+      - name: Assert deployment marker
+        run: test -f out/deployed.marker
+
+      - name: C05 container constraints
+        run: docker run --rm --network none --user "$(id -u):$(id -g)" "$IMAGE" --version
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: C01-${{ matrix.algorithm }}-evidence
+          path: out/
+
+  rejected-release:
+    name: ${{ matrix.id }} rejected release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: C02
+            mode: tamper
+            status: ARTIFACT_MISMATCH
+            code: 1
+          - id: C03
+            mode: empty-trust
+            status: KEY_NOT_TRUSTED
+            code: 1
+          - id: C04
+            mode: missing-file
+            status: INPUT_ERROR
+            code: 2
+    env:
+      SIGNING_KEY: ${{ secrets.SIGNING_KEY_ED25519 }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare signed release
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf dist out
+          mkdir -p dist out
+          printf 'osiris CI demo artifact\n' > dist/app.zip
+          docker pull "$IMAGE"
+          key_file="$(mktemp)"
+          chmod 600 "$key_file"
+          trap 'rm -f "$key_file"' EXIT
+          printf '%s' "$SIGNING_KEY" > "$key_file"
+          docker run --rm --network none --user "$(id -u):$(id -g)" \
+            -v "$GITHUB_WORKSPACE:/w" -v "$key_file:/key:ro" "$IMAGE" \
+            sign --file /w/dist/app.zip --package "$DEMO_PACKAGE" --version "$DEMO_VERSION" \
+            --key /key --out /w/dist/app.bundle.json
+
+      - name: Make rejection input
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "${{ matrix.mode }}" in
+            tamper) printf x >> dist/app.zip ;;
+            empty-trust) cp ci/trust-empty.json out/trust.json ;;
+            missing-file) : ;;
+          esac
+
+      - name: Verify rejected release and protect deploy
+        shell: bash
+        run: |
+          set -euo pipefail
+          file=/w/dist/app.zip
+          trust=/w/ci/trust.json
+          case "${{ matrix.mode }}" in
+            empty-trust) trust=/w/out/trust.json ;;
+            missing-file) file=/w/dist/does-not-exist.zip ;;
+          esac
+          set +e
+          docker run --rm --network none --user "$(id -u):$(id -g)" \
+            -v "$GITHUB_WORKSPACE:/w" "$IMAGE" \
+            verify --file "$file" --bundle /w/dist/app.bundle.json --trust-store "$trust" \
+            --package "$DEMO_PACKAGE" --version "$DEMO_VERSION" --json \
+            > out/verification.json 2> out/verify.stderr
+          code=$?
+          set -e
+          test "$code" -eq "${{ matrix.code }}"
+          grep -F '"status":"${{ matrix.status }}"' out/verification.json
+          test ! -e out/deployed.marker
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.id }}-evidence
+          path: out/

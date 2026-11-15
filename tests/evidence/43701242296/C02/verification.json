@@ -1,0 +1,1 @@
+{"valid":false,"status":"ARTIFACT_MISMATCH","message":"artifact size mismatch: manifest has 529636 bytes, file has 529637","algorithm":"ed25519","keyid":"ac18e2e7f6b47fb4473b6b9d9df671587602a2f448fdb2b951809a7d7521324a","package":"contoh-app","version":"1.0.0"}

@@ -1,8 +1,7 @@
 name: Release image
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 env:
   IMAGE: ghcr.io/grwna/osiris

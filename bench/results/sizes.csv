@@ -1,0 +1,4 @@
+algorithm,priv_der_bytes,pub_der_bytes,sig_bytes,bundle_bytes
+rsa-pss-sha256,1794,422,384,1006
+ecdsa-p256-sha256,138,91,64,586
+ed25519,48,44,64,574

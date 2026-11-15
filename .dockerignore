@@ -1,0 +1,7 @@
+.*
+bottom_*.deb
+pkg
+tests/keys/*.key.pem
+tests/keys-pipeline/*.key.pem
+bench/results
+scratch

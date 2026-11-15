@@ -1,0 +1,1 @@
+{"valid":true,"status":"OK","message":"contoh-app 1.0.0 (app.zip) verified with rsa-pss-sha256 key 1c790da70984b02265e9816e07eef8e60f8426c14cb4804bd8e7ed636ecb4763","algorithm":"rsa-pss-sha256","keyid":"1c790da70984b02265e9816e07eef8e60f8426c14cb4804bd8e7ed636ecb4763","package":"contoh-app","version":"1.0.0"}

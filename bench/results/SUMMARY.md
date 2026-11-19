@@ -25,7 +25,9 @@ Measured across 10 key pairs per algorithm. Operation is measured separately fro
 
 ## 2. Artifact Hashing (SHA-256)
 
-Raw SHA-256 digest computation time over artifact bytes, independently from manifest creation and signature operations.| Artifact | Size (Bytes) | Median | P95 (Nearest-Rank) |
+Raw SHA-256 digest computation time over artifact bytes, independently from manifest creation and signature operations.
+
+| Artifact | Size (Bytes) | Median | P95 (Nearest-Rank) |
 |---|---|---|---|
 | 1KiB | 1024 | 5.18 µs | 6.33 µs |
 | 1MiB | 1048576 | 1.07 ms | 1.25 ms |
@@ -33,7 +35,9 @@ Raw SHA-256 digest computation time over artifact bytes, independently from mani
 
 ## 3. Operations (Sign & Verify)
 
-Cryptographic operations over canonical manifest bytes, including algorithm-internal hashing.| Algorithm | Artifact | Operation | Median | P95 (Nearest-Rank) |
+Cryptographic operations over canonical manifest bytes, including algorithm-internal hashing.
+
+| Algorithm | Artifact | Operation | Median | P95 (Nearest-Rank) |
 |---|---|---|---|---|
 | `rsa-pss-sha256` | 1KiB | sign | 3.95 ms | 4.29 ms |
 | `rsa-pss-sha256` | 1KiB | verify | 200.43 µs | 252.12 µs |
@@ -56,7 +60,9 @@ Cryptographic operations over canonical manifest bytes, including algorithm-inte
 
 ## 4. End-to-End Latency
 
-Full application execution latency  (sign and verify), including I/O, artifact hashing, manifest serialization, trust store validation, and output writing.| Algorithm | Artifact | Command | Median | P95 |
+Full application execution latency (sign and verify), including I/O, artifact hashing, manifest serialization, trust store validation, and output writing.
+
+| Algorithm | Artifact | Command | Median | P95 |
 |---|---|---|---|---|
 | `rsa-pss-sha256` | 1KiB | sign | 14.90 ms | 16.55 ms |
 | `rsa-pss-sha256` | 1KiB | verify | 5.01 ms | 6.66 ms |

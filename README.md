@@ -29,7 +29,7 @@ docker pull ghcr.io/grwna/osiris@sha256:46ea2d15e8dfc66ad4a960356f5d0068e6a08927
 ```
 
 | Program version | GHCR image tag | Image digest |
-|---|---|---|---|
+|---|---|---|
 | `0.1.0` | `0.1.0` | `sha256:46ea2d15e8dfc66ad4a960356f5d0068e6a08927a10efca25a4def037333dcd3` |
 
 The image is published by running [`release.yml`](.github/workflows/release.yml)

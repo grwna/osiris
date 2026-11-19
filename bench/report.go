@@ -190,7 +190,7 @@ func generateSummaryMD(
 	sb.WriteString("\n")
 
 	sb.WriteString("## 2. Artifact Hashing (SHA-256)\n\n")
-	sb.WriteString("Raw SHA-256 digest computation time over artifact bytes, independently from manifest creation and signature operations.")
+	sb.WriteString("Raw SHA-256 digest computation time over artifact bytes, independently from manifest creation and signature operations.\n\n")
 	sb.WriteString("| Artifact | Size (Bytes) | Median | P95 (Nearest-Rank) |\n")
 	sb.WriteString("|---|---|---|---|\n")
 	for _, art := range artifacts {
@@ -206,7 +206,7 @@ func generateSummaryMD(
 	sb.WriteString("\n")
 
 	sb.WriteString("## 3. Operations (Sign & Verify)\n\n")
-	sb.WriteString("Cryptographic operations over canonical manifest bytes, including algorithm-internal hashing.")
+	sb.WriteString("Cryptographic operations over canonical manifest bytes, including algorithm-internal hashing.\n\n")
 	sb.WriteString("| Algorithm | Artifact | Operation | Median | P95 (Nearest-Rank) |\n")
 	sb.WriteString("|---|---|---|---|---|\n")
 	for _, p := range profiles {
@@ -226,7 +226,7 @@ func generateSummaryMD(
 	sb.WriteString("\n")
 
 	sb.WriteString("## 4. End-to-End Latency\n\n")
-	sb.WriteString("Full application execution latency  (sign and verify), including I/O, artifact hashing, manifest serialization, trust store validation, and output writing.")
+	sb.WriteString("Full application execution latency (sign and verify), including I/O, artifact hashing, manifest serialization, trust store validation, and output writing.\n\n")
 	sb.WriteString("| Algorithm | Artifact | Command | Median | P95 |\n")
 	sb.WriteString("|---|---|---|---|---|\n")
 	for _, p := range profiles {
